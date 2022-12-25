@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TimeTracking.Models;
 
 namespace TimeTracking.Data;
 
@@ -9,5 +10,6 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
+    public DbSet<TimeTracking.Models.Customer> Customer { get; set; }
 }
 

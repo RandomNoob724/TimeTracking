@@ -403,3 +403,7 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+# Sqlite DB file and other files that contains database changes
+.db
+*.db*
