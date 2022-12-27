@@ -12,5 +12,6 @@ public class ApplicationDbContext : IdentityDbContext
     }
     public DbSet<TimeTracking.Models.Customer> Customer { get; set; }
     public DbSet<TimeTracking.Models.Project> Project { get; set; }
+    public DbSet<TimeTracking.Models.TimeSheet> TimeSheet { get; set; }
 }
 
