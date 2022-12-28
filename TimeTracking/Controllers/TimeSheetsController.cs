@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TimeTracking.Data;
 using TimeTracking.Models;
+using TimeTracking.ViewModels;
 
 namespace TimeTracking.Controllers
 {
@@ -44,9 +45,16 @@ namespace TimeTracking.Controllers
         }
 
         // GET: TimeSheets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var projects = await _context.Project.ToListAsync();
+            TimeSheetsViewModel viewModel = new TimeSheetsViewModel()
+            {
+                TimeSheet = new TimeSheet(),
+                Projects = projects
+            };
+            
+            return View(viewModel);
         }
 
         // POST: TimeSheets/Create
