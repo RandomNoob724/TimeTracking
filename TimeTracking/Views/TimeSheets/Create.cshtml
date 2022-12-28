@@ -1,4 +1,4 @@
-﻿@model TimeTracking.Models.TimeSheet
+﻿@model TimeTracking.ViewModels.TimeSheetsViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,24 +13,24 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="WeekNumber" class="control-label"></label>
-                <input asp-for="WeekNumber" class="form-control" />
-                <span asp-validation-for="WeekNumber" class="text-danger"></span>
+                <label asp-for="TimeSheet.WeekNumber" class="control-label"></label>
+                <input asp-for="TimeSheet.WeekNumber" class="form-control" value="@Model.TimeSheet.WeekNumber" />
+                <span asp-validation-for="TimeSheet.WeekNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <input asp-for="Notes" class="form-control" />
-                <span asp-validation-for="Notes" class="text-danger"></span>
+                <label asp-for="TimeSheet.Notes" class="control-label"></label>
+                <input asp-for="TimeSheet.Notes" class="form-control" />
+                <span asp-validation-for="TimeSheet.Notes" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
+                <label asp-for="TimeSheet.StartDate" class="control-label"></label>
+                <input asp-for="TimeSheet.StartDate" class="form-control" />
+                <span asp-validation-for="TimeSheet.StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
+                <label asp-for="TimeSheet.EndDate" class="control-label"></label>
+                <input asp-for="TimeSheet.EndDate" class="form-control" />
+                <span asp-validation-for="TimeSheet.EndDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
