@@ -1,21 +1,26 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracking.Models;
+using TimeTracking.Data;
+using TimeTracking.ViewModels;
 
 namespace TimeTracking.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseController
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ApplicationDbContext context): base(context)
     {
-        _logger = logger;
+
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        TimeSheet activeTimeSheet = await GetActiveTimeSheet();
+        HomeViewModel homeViewModel = new HomeViewModel()
+        {
+            ActiveTimeSheet = activeTimeSheet
+        };
+        return View(homeViewModel);
     }
 
     public IActionResult Privacy()
