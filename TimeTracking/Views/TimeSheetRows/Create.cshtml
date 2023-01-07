@@ -1,0 +1,38 @@
+﻿@model TimeTracking.ViewModels.TimeSheetRowViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>TimeSheetRow</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if(Model.Projects.Any())
+            {
+                <select name="ProjectId" asp-items="@(new SelectList(Model.Projects, nameof(Project.Id), nameof(Project.Name)))">
+                </select>
+            }
+            @foreach(var day in Model.TimeSheetRow.HoursPerday)
+            {
+                <label for="@day.Key">@day.Key</label>
+                <input type="text" name="@day.Key" value="" placeholder="@day.Value"/>
+            }
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

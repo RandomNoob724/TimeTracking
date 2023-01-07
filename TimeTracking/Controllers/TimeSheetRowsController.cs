@@ -8,100 +8,98 @@ using Microsoft.EntityFrameworkCore;
 using TimeTracking.Data;
 using TimeTracking.Models;
 using TimeTracking.ViewModels;
-using TimeTracking.Utils;
 
 namespace TimeTracking.Controllers
 {
-    public class TimeSheetsController : Controller
+    public class TimeSheetRowsController : BaseController
     {
         private readonly ApplicationDbContext _context;
 
-        public TimeSheetsController(ApplicationDbContext context)
+        public TimeSheetRowsController(ApplicationDbContext context):base(context)
         {
             _context = context;
         }
 
-        // GET: TimeSheets
+        // GET: TimeSheetRows
         public async Task<IActionResult> Index()
         {
-            DateTime startOfWeek = DateHelper.FirstDayOfWeek(DateTime.Now);
-            DateTime endOfWeek = DateHelper.FirstDayOfWeek(DateTime.Now);
-            List<TimeSheet> timeSheets = await _context.TimeSheet.Where(x => x.StartDate >= startOfWeek && x.EndDate <= endOfWeek).ToListAsync();
-            return View(timeSheets);
+            TimeSheet activeTimeSheet = await GetActiveTimeSheet();
+              return View(activeTimeSheet.TimeSheetRows);
         }
 
-        // GET: TimeSheets/Details/5
+        // GET: TimeSheetRows/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.TimeSheet == null)
+            if (id == null || _context.TimeSheetRow == null)
             {
                 return NotFound();
             }
 
-            var timeSheet = await _context.TimeSheet
+            var timeSheetRow = await _context.TimeSheetRow
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (timeSheet == null)
+            if (timeSheetRow == null)
             {
                 return NotFound();
             }
 
-            return View(timeSheet);
+            return View(timeSheetRow);
         }
 
-        // GET: TimeSheets/Create
+        // GET: TimeSheetRows/Create
         public async Task<IActionResult> Create()
         {
-            var projects = await _context.Project.ToListAsync();
-            TimeSheetsViewModel viewModel = new TimeSheetsViewModel()
+            TimeSheetRow timeSheetRow = new TimeSheetRow(String.Empty);
+            List<Project> projects = await _context.Project.ToListAsync();
+            TimeSheetRowViewModel viewModel = new TimeSheetRowViewModel()
             {
-                TimeSheet = new TimeSheet(),
+                TimeSheetRow = timeSheetRow,
                 Projects = projects
             };
-            
             return View(viewModel);
         }
 
-        // POST: TimeSheets/Create
+        // POST: TimeSheetRows/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,WeekNumber,Notes,StartDate,EndDate")] TimeSheet timeSheet)
+        public async Task<IActionResult> Create([Bind("Id,Title,HoursPerday")] TimeSheetRow timeSheetRow)
         {
+
             if (ModelState.IsValid)
             {
-                timeSheet.Id = Guid.NewGuid();
-                _context.Add(timeSheet);
+                timeSheetRow.Id = Guid.NewGuid();
+                _context.Add(timeSheetRow);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(timeSheet);
+            return View(timeSheetRow);
         }
 
-        // GET: TimeSheets/Edit/5
+        // GET: TimeSheetRows/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.TimeSheet == null)
+            if (id == null || _context.TimeSheetRow == null)
             {
                 return NotFound();
             }
 
-            var timeSheet = await _context.TimeSheet.FindAsync(id);
-            if (timeSheet == null)
+            var timeSheetRow = await _context.TimeSheetRow.FindAsync(id);
+            if (timeSheetRow == null)
             {
                 return NotFound();
             }
-            return View(timeSheet);
+            return View(timeSheetRow);
         }
 
-        // POST: TimeSheets/Edit/5
+        // POST: TimeSheetRows/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,WeekNumber,Notes,StartDate,EndDate")] TimeSheet timeSheet)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,HoursPerday")] TimeSheetRow timeSheetRow)
         {
-            if (id != timeSheet.Id)
+            if (id != timeSheetRow.Id)
             {
                 return NotFound();
             }
@@ -110,12 +108,12 @@ namespace TimeTracking.Controllers
             {
                 try
                 {
-                    _context.Update(timeSheet);
+                    _context.Update(timeSheetRow);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TimeSheetExists(timeSheet.Id))
+                    if (!TimeSheetRowExists(timeSheetRow.Id))
                     {
                         return NotFound();
                     }
@@ -126,49 +124,49 @@ namespace TimeTracking.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(timeSheet);
+            return View(timeSheetRow);
         }
 
-        // GET: TimeSheets/Delete/5
+        // GET: TimeSheetRows/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.TimeSheet == null)
+            if (id == null || _context.TimeSheetRow == null)
             {
                 return NotFound();
             }
 
-            var timeSheet = await _context.TimeSheet
+            var timeSheetRow = await _context.TimeSheetRow
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (timeSheet == null)
+            if (timeSheetRow == null)
             {
                 return NotFound();
             }
 
-            return View(timeSheet);
+            return View(timeSheetRow);
         }
 
-        // POST: TimeSheets/Delete/5
+        // POST: TimeSheetRows/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.TimeSheet == null)
+            if (_context.TimeSheetRow == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.TimeSheet'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.TimeSheetRow'  is null.");
             }
-            var timeSheet = await _context.TimeSheet.FindAsync(id);
-            if (timeSheet != null)
+            var timeSheetRow = await _context.TimeSheetRow.FindAsync(id);
+            if (timeSheetRow != null)
             {
-                _context.TimeSheet.Remove(timeSheet);
+                _context.TimeSheetRow.Remove(timeSheetRow);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TimeSheetExists(Guid id)
+        private bool TimeSheetRowExists(Guid id)
         {
-          return _context.TimeSheet.Any(e => e.Id == id);
+          return _context.TimeSheetRow.Any(e => e.Id == id);
         }
     }
 }

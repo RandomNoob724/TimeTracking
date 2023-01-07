@@ -16,6 +16,13 @@ public class HomeController : BaseController
     public async Task<IActionResult> Index()
     {
         TimeSheet activeTimeSheet = await GetActiveTimeSheet();
+        if(activeTimeSheet == null)
+        {
+            TimeSheet thisWeeksTimeSheet = new TimeSheet();
+            _context.TimeSheet.Add(thisWeeksTimeSheet);
+            await _context.SaveChangesAsync();
+            return View(new HomeViewModel() { ActiveTimeSheet = thisWeeksTimeSheet });
+        }
         HomeViewModel homeViewModel = new HomeViewModel()
         {
             ActiveTimeSheet = activeTimeSheet
